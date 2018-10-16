@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { ANIMALES } from '../../data/data.animales'
 import {AnimalInterface} from "../../interfaces/animal.interface";
+import {Refresher, reorderArray} from "ionic-angular";
 
 @Component({
   selector: 'page-home',
@@ -11,10 +11,11 @@ export class HomePage {
   animales: AnimalInterface[] = [];
   audio = new Audio();
   audioTime: any;
+  ordenando: boolean = false;
 
   constructor() {
     // Copiar el objeto con splice
-    this.animales = ANIMALES.splice(0);
+    this.animales = ANIMALES.slice(0);
   }
 
   reproducir(animal: AnimalInterface) {
@@ -44,5 +45,24 @@ export class HomePage {
         animal.reproduciendo = false;
       }
     }
+  }
+
+  borrarAnimal(idx: number) {
+    this.animales.splice(idx, 1);
+  }
+
+  doRefresh(refresher: Refresher) {
+    console.log('Inicio del refresh');
+
+    setTimeout(() => {
+      console.log('Termino de refresh');
+      this.animales = ANIMALES.slice(0);
+      refresher.complete();
+    }, 1500);
+  }
+
+  reordenarAnimales(indices: any) {
+    console.log(indices);
+    this.animales = reorderArray(this.animales, indices);
   }
 }
